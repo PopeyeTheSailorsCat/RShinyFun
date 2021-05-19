@@ -20,7 +20,8 @@ ui <- fluidPage(
      
     ),  # Inside the sidebarLayout, add a sidebarPanel
     mainPanel(
-      # write your code here:
+      plotOutput("way_plot"),
+      textOutput("message_to_user")
       
     )  # Inside the sidebarLayout, add a mainPanel
   )
@@ -39,12 +40,91 @@ server <- function(input, output,session) {
     print(pars)
     return(pars)
   }
-  
+  get_petrol_points<-function(road,car,stations){
+    petrol_V <- car$petrol_V
+    liters_per_km <- (car$liters_per_100_km)/100
+    km_car_go_full <- petrol_V/liters_per_km
+    km_car_go <- petrol_V*input$percent_of_petrol_tank/(100*liters_per_km)
+    sort_stations <-stations[order(stations$location),]
+    print(sort_stations)
+    print(km_car_go)
+    position = 0
+    last_saw <-c(0,0,0)
+    names(last_saw)<-c("id","on_road","location")
+    last_saw<-as.data.frame(t(last_saw))
+    visit.names <- names(last_saw)
+    visit <- sapply(visit.names,function(x) NULL)
+    i <- 1
+    while (position+km_car_go<road[ ,3])
+      {
+
+#i<=length(sort_stations$location) &&
+      if (i>length(sort_stations$location) || position + km_car_go < sort_stations[i,3]){
+        # print("WE CANT DO THIS")
+        # also print if we too close
+        if (last_saw$location != position){
+          position <- last_saw$location
+          # visit_len <-visit_len+1
+          # visit[[length(visit)+1]]<-last_saw
+          km_car_go <- km_car_go_full
+          visit <- mapply(c, visit, last_saw, SIMPLIFY = FALSE)
+          i=i-2
+        }else{
+          return(NULL)
+        }
+        
+        
+      }else{
+        last_saw = sort_stations[i,]
+      }
+      i=i+1    
+    }
+    return(visit)
+  }
   get_stations_from_id<-function(id){
     add_url = paste('roads/',toString(id),'/get_stations/',sep="")
     stations <-get_data(add_url)
     return(stations)
   }
+
+  observeEvent(input$calculate_way,{
+    road_id <- match(input$roads,road_data()$name)
+    car_id <-match(input$cars,car_data()$name)
+    stations <-get_stations_from_id(road_id)
+    print(road_id)
+    print(car_id)
+    car <-car_data()[car_id,1:4]
+    road <-road_data()[road_id,1:3]
+    # print(str(road))
+    loc_on_road <- stations$location
+    petrol_points <- get_petrol_points(road,car,stations)
+    print(petrol_points)
+    if (is.null(petrol_points)){
+      output$message_to_user <-renderText({ 
+        "You cant reach the end of road"
+      })
+      output$way_plot<-NULL
+    }else if(is.null(petrol_points$location)){
+      output$message_to_user <-renderText({ 
+        "You dont need any station"
+      })
+
+      output$way_plot<-NULL
+    
+    }else{
+    print("petrol")
+    print(petrol_points$location)
+    way <- unlist(list(0,road$length))
+    output$way_plot <-renderPlot({
+      ggplot(NULL,mapping = aes(x = location, y = 0)) +
+        geom_line(data = as.data.frame(way),mapping = aes(x = way, y = 0),size =0.5)+
+        geom_point(data = stations, size = 3)+
+        geom_point(data = as.data.frame(petrol_points), size=3,color = "red")
+      })
+    }
+  })
+  
+  
   
   
   
