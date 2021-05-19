@@ -63,10 +63,14 @@ server <- function(input, output,session) {
         # print("WE CANT DO THIS")
         # also print if we too close
         if (last_saw$location != position){
+          print("krya")
+          
           position <- last_saw$location
+          print(position)
           # visit_len <-visit_len+1
           # visit[[length(visit)+1]]<-last_saw
           km_car_go <- km_car_go_full
+          print(last_saw$location)
           visit <- mapply(c, visit, last_saw, SIMPLIFY = FALSE)
           i=i-2
         }else{
