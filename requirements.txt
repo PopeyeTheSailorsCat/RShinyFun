@@ -8,3 +8,4 @@ requests==2.25.1
 Django == 3.2
 gunicorn
 django-heroku
+dj-database-url
