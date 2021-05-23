@@ -30,8 +30,8 @@ ui <- fluidPage(
 # Define server logic to plot various variables against mpg ----
 server <- function(input, output,session) {
   
-  get_data <- function(add_url){
-    url = paste(base_url,add_url,sep="")
+  get_data <- function(add_url){#gettuin data from server API
+    url = paste(base_url,add_url,sep="") # concate basic server API adress with specific section
     resp = GET(url)
     if (http_type(resp) != "application/json") {
       stop("API did not return json", call. = FALSE)
@@ -42,13 +42,14 @@ server <- function(input, output,session) {
   }
   
   get_petrol_points<-function(road,car,stations){
+    #getting data
     petrol_V <- car$petrol_V
     liters_per_km <- (car$liters_per_100_km)/100
-    km_car_go_full <- petrol_V/liters_per_km
-    km_car_go <- petrol_V*input$percent_of_petrol_tank/(100*liters_per_km)
-    sort_stations <-stations[order(stations$location),]
-    print(sort_stations)
-    print(km_car_go)
+    km_car_go_full <- petrol_V/liters_per_km #with full tank
+    km_car_go <- petrol_V*input$percent_of_petrol_tank/(100*liters_per_km) #with start tank
+    sort_stations <-stations[order(stations$location),] # to normal algo run
+    
+    #setting start params
     position = 0
     last_saw <-c(0,0,0)
     names(last_saw)<-c("id","on_road","location")
@@ -56,23 +57,27 @@ server <- function(input, output,session) {
     visit.names <- names(last_saw)
     visit <- sapply(visit.names,function(x) NULL)
     i <- 1
-    while (position+km_car_go<road[ ,3])
-      {
+    
+    # standard greedy algorithm
+    while (position+km_car_go<road[ ,3]) #while we dont get to destination
+      {# if we cant visit anyone or get to this station
       if (i>length(sort_stations$location) || position + km_car_go < sort_stations[i,3]){
+        #if we meet station after last refueling
+        # we can refill gas tank
         if (last_saw$location != position){
-          position <- last_saw$location
-          print(position)
-          km_car_go <- km_car_go_full
-          print(last_saw$location)
-          visit <- mapply(c, visit, last_saw, SIMPLIFY = FALSE)
-          i=i-2
+          position <- last_saw$location #we located at last station
+          km_car_go <- km_car_go_full # now we have full tank kms
+          visit <- mapply(c, visit, last_saw, SIMPLIFY = FALSE) # add station to visited
+          i=i-2 #rechecking with full tank
         }else{
-          return(NULL)
+          # we already fill tank here and cant go futher, its the end
+          return(NULL) # cant reach the end
         }
       }else{
+        #write down last seen station
         last_saw = sort_stations[i,]
       }
-      i=i+1    
+      i=i+1 #next station
     }
     return(visit)
   }
@@ -84,38 +89,44 @@ server <- function(input, output,session) {
   }
 
   observeEvent(input$calculate_way,{
+    #collecting data about trip
     road_id <- match(input$roads,road_data()$name)
     car_id <-match(input$cars,car_data()$name)
     stations <-get_stations_from_id(road_id)
-    print(road_id)
-    print(car_id)
     car <-car_data()[car_id,1:4]
     road <-road_data()[road_id,1:3]
-    # print(str(road))
     loc_on_road <- stations$location
-    petrol_points <- get_petrol_points(road,car,stations)
-    print(petrol_points)
-    if (is.null(petrol_points)){
+    
+    petrol_points <- get_petrol_points(road,car,stations) #getting where to stop
+    
+    #output 
+    
+    if (is.null(petrol_points)){ #cant reach the end
       output$message_to_user <-renderText({ 
         "You cant reach the end of road"
       })
-      output$way_plot<-NULL
-    }else if(is.null(petrol_points$location)){
+      output$way_plot<-NULL #clearing
+    }else if(is.null(petrol_points$location)){ # can reach without visiting stations
       output$message_to_user <-renderText({ 
         "You dont need any station"
       })
 
-      output$way_plot<-NULL
+      output$way_plot<-NULL #cleating
     
     }else{
-    print("petrol")
-    print(petrol_points$location)
+      output$message_to_user <-NULL
+    
+    #plotting result 
+      
     way <- unlist(list(0,road$length))
     output$way_plot <-renderPlot({
       ggplot(NULL,mapping = aes(x = location, y = 0)) +
         geom_line(data = as.data.frame(way),mapping = aes(x = way, y = 0),size =0.5)+
         geom_point(data = stations, size = 3)+
-        geom_point(data = as.data.frame(petrol_points), size=3,color = "red")
+        geom_point(data = as.data.frame(petrol_points), size=3,color = "red")+
+        theme(aspect.ratio=1/15,axis.ticks.y=element_blank(),
+              axis.title.y=element_blank(),
+              axis.text.y=element_blank()) #Long and skinny
       })
     }
   })
