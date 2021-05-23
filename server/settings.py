@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-21n_p#ki8%=-*m_qq8@o=ryrpy)wxe@ak201545l0ubu5bi!hi'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False #false
+DEBUG = False # try jenkins
 
 ALLOWED_HOSTS = ['spb-stu-rshiny-lab.herokuapp.com', '127.0.0.1']
 
