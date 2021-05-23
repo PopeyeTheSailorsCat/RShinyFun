@@ -5,7 +5,12 @@ The interaction between this repository and the heroku repository is carried out
 Programming language is Python 3.7
 
 ## Repository content
-In this repository, we have three main folders: the Shiny Application folder(app), the django server folder(server), and the django application folder (old_town_road). In the normal case, the R and Django folders should be separated, but for the sake of clarity of the project, they are in the same place.   
+In this repository, we have three main folders:  
+  * Shiny Application folder(app)  
+  * Django server folder(server)
+* django application folder (old_town_road).    
+  
+In the normal case, the R and Django folders should be separated, but for the sake of clarity of the project, they are in the same place.   
 The end user will only be interested in the app where the file shiny.R is located. R which is supposed to be used by the user. 
 Also in this repository there is an MIT license and files related to the launch of the heroku server
 
