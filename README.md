@@ -17,7 +17,7 @@ Also, we recommend installing RStudio. In this guide we  think you using Rstudio
    > runApp("shiny.R")
 ```
 After that, a window will open in which you will see.  
-PIC_1.
+![PIC_1](https://github.com/Brightest-Sunshine/pictures-for-README-files/blob/master/pics/RShiny1.jpg)
 
 (if you see the message 'waiting for information', then wait a bit, the server processes your request)
 
@@ -25,11 +25,12 @@ Select the road you want to drive, and the car you are driving from the list.
 Use the slider to indicate how much gasoline you have in the tank(as a percentage).
 Then click calculate
 
-PIC_2.
+![PIC_2](https://github.com/Brightest-Sunshine/pictures-for-README-files/blob/master/pics/RShiny2.jpg)
 
 At the end, you can see the stations (marked in red) where you need to stop for refueling.
 
-PIC_3.
+![PIC_3](https://github.com/Brightest-Sunshine/pictures-for-README-files/blob/master/pics/RShiny3.jpg)
+
 # Development team
 1. Mamaeva Anastasia
 
