@@ -132,7 +132,7 @@ server <- function(input, output,session) {
   
   
   
-  base_url <- "http://127.0.0.1:8000/api/"
+  base_url <- "https://spb-stu-rshiny-lab.herokuapp.com/api/"
   road_data <-reactive(get_data('roads/'))
   car_data <-reactive(get_data('cars/'))
   # station_to_road_data <-reactive((get_data))
