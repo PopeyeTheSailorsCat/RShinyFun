@@ -29,17 +29,18 @@ ui <- fluidPage(
 
 # Define server logic to plot various variables against mpg ----
 server <- function(input, output,session) {
+  
   get_data <- function(add_url){
-    # url = modify_url(base_url,path = add_url)
     url = paste(base_url,add_url,sep="")
     resp = GET(url)
     if (http_type(resp) != "application/json") {
       stop("API did not return json", call. = FALSE)
     }
-    pars <-jsonlite::fromJSON(content(resp, "text"), flatten = TRUE)#simplifyVector = FALSE)
+    pars <-jsonlite::fromJSON(content(resp, "text"), flatten = TRUE)
     print(pars)
     return(pars)
   }
+  
   get_petrol_points<-function(road,car,stations){
     petrol_V <- car$petrol_V
     liters_per_km <- (car$liters_per_100_km)/100
@@ -57,18 +58,10 @@ server <- function(input, output,session) {
     i <- 1
     while (position+km_car_go<road[ ,3])
       {
-
-#i<=length(sort_stations$location) &&
       if (i>length(sort_stations$location) || position + km_car_go < sort_stations[i,3]){
-        # print("WE CANT DO THIS")
-        # also print if we too close
         if (last_saw$location != position){
-          print("krya")
-          
           position <- last_saw$location
           print(position)
-          # visit_len <-visit_len+1
-          # visit[[length(visit)+1]]<-last_saw
           km_car_go <- km_car_go_full
           print(last_saw$location)
           visit <- mapply(c, visit, last_saw, SIMPLIFY = FALSE)
@@ -76,8 +69,6 @@ server <- function(input, output,session) {
         }else{
           return(NULL)
         }
-        
-        
       }else{
         last_saw = sort_stations[i,]
       }
@@ -85,6 +76,7 @@ server <- function(input, output,session) {
     }
     return(visit)
   }
+  
   get_stations_from_id<-function(id){
     add_url = paste('roads/',toString(id),'/get_stations/',sep="")
     stations <-get_data(add_url)
@@ -135,10 +127,7 @@ server <- function(input, output,session) {
   base_url <- "https://spb-stu-rshiny-lab.herokuapp.com/api/"
   road_data <-reactive(get_data('roads/'))
   car_data <-reactive(get_data('cars/'))
-  # station_to_road_data <-reactive((get_data))
   output$road_output<-renderText({road_data()$name})
-  # selected_road_id <-
-  
   
   observe({
     x <- road_data()$name
