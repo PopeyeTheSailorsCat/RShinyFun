@@ -15,13 +15,12 @@ The end user will only be interested in the app where the file shiny.R is locate
 Also in this repository there is an MIT license and files related to the launch of the heroku server
 
 ## Running application  
-To launch shiny.R you need to install R(https://www.r-project.org/).
-Also, we recommend installing RStudio. In this guide we  think you using Rstudio. After all installation open folder app as RStudio project. When write this in you console
+To launch shiny. R you need to install R(https://www.r-project.org/). After installation, make sure R is in your Path. 
+ When start a console in project root and write.
 ```commandline
-   > library(shiny)
-   > runApp("shiny.R")
+   > R -e "shiny::runApp('app/shiny.R')"
 ```
-After that, a window will open in which you will see.  
+After what R print adress, and you can open application in your browser.
 ![PIC_1](https://github.com/Brightest-Sunshine/pictures-for-README-files/blob/master/pics/RShiny1.jpg)
 
 (if you see the message 'waiting for information', then wait a bit, the server processes your request)
