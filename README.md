@@ -11,14 +11,44 @@ In this repository, we have three main folders:
 * django application folder (old_town_road).    
   
 In the normal case, the R and Django folders should be separated, but for the sake of clarity of the project, they are in the same place.   
-The end user will only be interested in the app where the file shiny.R is located. R which is supposed to be used by the user. 
+The end user will only be interested in the app where the file app.R is located. R which is supposed to be used by the user. 
 Also in this repository there is an MIT license and files related to the launch of the heroku server
+## Running Django server locally
+To start Django on you local machine you will need python at first.
+Install Django running
+```commandline
+    > pip install Django
+```
+Make sure what DEBUG in 'server/setting.py' is True.  
+After that start server from a console in the project root.
+```commandline
+    > python manage.py runserver
+```
+Access server at '127.0.0.1'.
+## Deploy Django server on heroku
+Repository already have all needed for running django application on heroku. All you need is to create heroku repo for your project and push this repo there.  
+Before pushing make sure DEBUG in 'server/setting.py' is False.
+Also add your new server address to ALLOWED_HOSTS in 'server/setting.py'
+In our code we are using Heroku-Postgre('https://www.heroku.com/postgres'), choose a plan you will use.  
+After pushing run migrate on heroku:
+```commandline
+    > heroku python manage.py migrate
+```
+## Using application
+You can easily access our application on 'https://popeythesailor.shinyapps.io/app_client/'.
 
-## Running application  
-To launch shiny. R you need to install R(https://www.r-project.org/). After installation, make sure R is in your Path. 
+## Deploy application on server
+We recommend using 'www.shinyapps.io', they have free hosting for small projects and user guide how to start.
+## Running application locally
+To launch app.R you need to install R(https://www.r-project.org/). After installation, make sure R is in your Path.  
+If you are going to use your server write you address to app/config.json.  
+After that you need to install shiny package, write in console
+```commandline
+    > R -e "install.packages("shiny")"
+```
  When start a console in project root and write.
 ```commandline
-   > R -e "shiny::runApp('app/shiny.R')"
+   > R -e "shiny::runApp('app/app.R')"
 ```
 After what R print adress, and you can open application in your browser.
 ![PIC_1](https://github.com/Brightest-Sunshine/pictures-for-README-files/blob/master/pics/RShiny1.jpg)
