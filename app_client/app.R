@@ -2,6 +2,7 @@ library(shiny)
 library(httr)
 library(jsonlite)
 library(rlist)
+library(rjson)
 library(ggplot2)
 # Define UI for miles per gallon app ----
 ui <- fluidPage(
@@ -28,9 +29,8 @@ ui <- fluidPage(
 
 # Define server logic to plot various variables against mpg ----
 server <- function(input, output,session) {
-  
-  get_data <- function(add_url){#gettuin data from server API
-    url = paste(base_url, add_url, sep="") # concate basic server API adress with specific section
+  config <- fromJSON(file = "config.json") # getting api urls and other staff from config
+  get_data <- function(url){#gettuin data from server API
     resp = GET(url)
     if (http_type(resp) != "application/json") {
       stop("API did not return json", call. = FALSE)
@@ -82,7 +82,7 @@ server <- function(input, output,session) {
   }
   
   get_stations_from_id <- function(id){
-    add_url = paste('roads/', toString(id), '/get_stations/', sep="")
+    add_url = paste(config$road_api_url, toString(id), '/get_stations/', sep="")
     stations <- get_data(add_url)
     return(stations)
   }
@@ -134,9 +134,9 @@ server <- function(input, output,session) {
   
   
   
-  base_url <- "https://spb-stu-rshiny-lab.herokuapp.com/api/"
-  road_data <- reactive(get_data('roads/'))
-  car_data <- reactive(get_data('cars/'))
+  # base_url <- "https://spb-stu-rshiny-lab.herokuapp.com/api/"
+  road_data <- reactive(get_data(config$road_api_url))
+  car_data <- reactive(get_data(config$car_api_url))
   output$road_output <- renderText({road_data()$name})
   
   observe({
