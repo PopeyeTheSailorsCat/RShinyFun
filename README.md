@@ -27,7 +27,7 @@ After that start server from a console in the project root.
 Access server at '127.0.0.1'.
 ### Setting database at local
  To run server properly, you need to create a database and migrate to her.  
-To achieve this you need to create db you want, and set it in DATABASES, located at 'server/settings.py'.
+To achieve this you need to create db you want(SQlite for example 'https://www.tutorialspoint.com/sqlite/sqlite_create_database.htm' ), and set it in DATABASES, located at 'server/settings.py'.
 After this, you need to migrate your db to our models:
 ```commandline
     > python manage.py migrate
