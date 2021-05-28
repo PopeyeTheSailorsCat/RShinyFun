@@ -25,12 +25,22 @@ After that start server from a console in the project root.
     > python manage.py runserver
 ```
 Access server at '127.0.0.1'.
+### Setting database at local
+ To run server properly, you need to create a database and migrate to her.  
+To achieve this you need to create db you want, and set it in DATABASES, located at 'server/settings.py'.
+After this, you need to migrate your db to our models:
+```commandline
+    > python manage.py migrate
+```
+Now your db and server ready to run.
+
+
 ## Deploy Django server on heroku
 Repository already have all needed for running django application on heroku. All you need is to create heroku repo for your project and push this repo there.  
 Before pushing make sure DEBUG in 'server/setting.py' is False.
-Also add your new server address to ALLOWED_HOSTS in 'server/setting.py'
-In our code we are using Heroku-Postgre('https://www.heroku.com/postgres'), choose a plan you will use.  
-After pushing run migrate on heroku:
+Also add your new server address to ALLOWED_HOSTS in 'server/setting.py'  
+In our code we are using Heroku-Postgre('https://www.heroku.com/postgres'), choose a plan you will use. If you want to use another db, check 'Setting databases at local'.  
+After pushing run migrate your db on heroku:
 ```commandline
     > heroku python manage.py migrate
 ```
