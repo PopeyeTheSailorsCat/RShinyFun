@@ -1,0 +1,11 @@
+djangorestframework==3.12.4
+flake8==3.9.1
+mypy==0.812
+packaging==20.9
+psycopg2==2.8.6
+pytest==6.2.3
+requests==2.25.1
+Django == 3.2
+gunicorn
+django-heroku
+dj-database-url

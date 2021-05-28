@@ -1,0 +1,6 @@
+{
+	"main_api_url" : "https://spb-stu-rshiny-lab.herokuapp.com/api/",
+	"road_api_url": "https://spb-stu-rshiny-lab.herokuapp.com/api/roads/",
+	"car_api_url" : "https://spb-stu-rshiny-lab.herokuapp.com/api/cars/",
+	"gas_station_api_url" : "https://spb-stu-rshiny-lab.herokuapp.com/api/gas_stations/"
+	}
